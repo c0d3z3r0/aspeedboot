@@ -12,50 +12,60 @@
 
 #include "config.h"
 
-xfer:
-	// r0: uart to write to
-	// r7: flash addr
-	// r8: mem addr
-	// r9: size
-	// r10: FMC
-	// r11: string to print
+
+/*
+ * DMA load from flash
+ *
+ * r7: flash address
+ * r8: size
+ * r9: memory address
+ * r10: FMC
+ */
+dma_load:
+	/* save return address */
 	mov r13, lr
 
-	// Start DMA load of kernel
-	str r7, [r10, #0x84]
-	str r8, [r10, #0x88]
-	// The DMA size is the actual size -4 according to the datasheet
-	ldr r1, [r9]
-	sub r1, r1, #4
-	str r1, [r10, #0x8C]
+	/* set up DMA parameters */
+	str r7, [r10, #0x84]	@ flash address
+	str r9, [r10, #0x88]	@ memory address
+	sub r8, r8, #4		@ DMA size = size-4 according to datasheet
+	str r8, [r10, #0x8C]	@ DMA size
+
+	/* start DMA */
 	mov r1, #0x1
 	str r1, [r10, #0x80]
 
-	// Wait for DMA to complete
-2:
-	ldr r1, [r10, #0x8C]
+/* wait for dma to complete */
+dma_wait:
+	ldr r1, [r10, #0x8C]	@ DMA size left
 	cmp r1, #0x0
-	bne 2b
+	bne dma_wait
 
 
+	/* disable DMA */
 	mov r1, #0x0
 	str r1, [r10, #0x80]
+
+	/* jump back to return address in boot */
 	mov pc, r13
 
+/* start code jumps here */
+main:
+	.global main
 
-	.globl _main
-_main:
-	ldr r10, =0x1e620000  // Static memory controller (FMC)
+/* boot sequence */
+boot:
+	ldr r7, =kernel_start	@ DMA flash source address
+	ldr r8, =kernel_size	@ DMA size
+	ldr r9, =0x41000000	@ DMA sdram target address
+	ldr r10, =0x1e620000	@ FMC
 
-	// Start DMA load of kernel
-	ldr r7,  =kernel_start
-	// Load the kernel higher than 0x40008000 + size to avoid an extra relocation
-	ldr r8,  =0x41000000
-	ldr r9,  =kernel_size
-	bl xfer
+	bl dma_load
 
-	mov r0, #0x0
-	sub r1, r0, #0x1
-	mov r2, #0x0
+	/* kernel boot args */
+	mov r0, #0
+	mov r1, #-1
+	mov r2, #0
 
+	/* jump to kernel code */
 	ldr pc, =0x41000000

@@ -44,7 +44,8 @@ _start:
 	msr	cpsr,r0
 
 	bl	cpu_init_crit
-	bl	_main
+
+	bl	main
 
 cpu_init_crit:
 	/*
