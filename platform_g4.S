@@ -82,7 +82,7 @@
  */
 
 #include <config.h>
-#include <version.h>
+//#include <version.h>
 /******************************************************************************
  Calibration Macro Start
  Usable registers:
