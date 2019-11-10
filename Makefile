@@ -12,6 +12,8 @@
 
 .PHONY: all clean
 
+DEBUG ?= 0
+
 CROSS_COMPILE ?= arm-none-eabi-
 CC := $(CROSS_COMPILE)gcc
 OBJCOPY := $(CROSS_COMPILE)objcopy
@@ -20,7 +22,7 @@ OBJCOPY := $(CROSS_COMPILE)objcopy
 all: boot.bin
 
 boot.elf: start.S platform_g4.S main.S
-	$(CC) -Wall -Wl,-T boot.ld -Wl,--no-dynamic-linker -nostdlib -I $(PWD) -o $@ $^
+	$(CC) -DDEBUG=$(DEBUG) -Wall -Wl,-T boot.ld -Wl,--no-dynamic-linker -nostdlib -I $(PWD) -o $@ $^
 
 boot.bin: boot.elf
 	$(OBJCOPY) --only-section=.text -O binary $< $@

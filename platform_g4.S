@@ -397,6 +397,7 @@ set_MPLL:
     mov r1, #0x07
     str r1, [r0]
 
+#if DEBUG
     ldr r0, =0x1e784000
     mov r1, #0x0D                                @ '\r'
     str r1, [r0]
@@ -428,6 +429,7 @@ set_MPLL:
     str r1, [r0]
     mov r1, #0x52                                @ 'R'
     str r1, [r0]
+#endif
 /* Debug - UART console message */
 
     ldr r0, =0x1e6e2074                          @ Reset Randon Number Generator
@@ -618,6 +620,7 @@ delay_2:
  tMRD   = max(15 CK,20 ns)
  ******************************************************************************/
 ddr3_init:
+#if DEBUG
 /* Debug - UART console message */
     ldr r0, =0x1e784000
     mov r1, #0x33                                @ '3'
@@ -627,6 +630,7 @@ ddr3_init:
     mov r1, #0x0A                                @ '\n'
     str r1, [r0]
 /* Debug - UART console message */
+#endif
 
     ldr r0, =0x1e6e0004
     ldr r1, =0x00000531                          @ Default set to 1Gbit
@@ -807,6 +811,7 @@ delay3_4:
  tMRD   = 4     CK
  ******************************************************************************/
 ddr2_init:
+#if DEBUG
 /* Debug - UART console message */
     ldr r0, =0x1e784000
     mov r1, #0x32                                @ '2'
@@ -816,6 +821,7 @@ ddr2_init:
     mov r1, #0x0A                                @ '\n'
     str r1, [r0]
 /* Debug - UART console message */
+#endif
 
     ldr r0, =0x1e6e0004
     ldr r1, =0x00000521                          @ Default set to 1Gbit
@@ -1459,6 +1465,7 @@ init_sram_start3:
   r11 = passcnt accumulator for each DQIDLY
  *****************************************************************************/
 CBR0_START:
+#if DEBUG
 /* Debug - UART console message */
     ldr r0, =0x1e784000
     mov r1, #0x43                                @ 'C'
@@ -1472,6 +1479,7 @@ CBR0_START:
     mov r1, #0x2D                                @ '-'
     str r1, [r0]
 /* Debug - UART console message */
+#endif
 
     ldr   r0, =0x1e6e0018
     ldr   r1, [r0]
@@ -1497,12 +1505,14 @@ cbr0_next_dqidly:
     cmp   r8, #0x1F                              @ max DQIDLY = 31
     bgt   CBR0_END
 
+#if DEBUG
 /* Debug - UART console message */
     ldr   r0, =0x1e784000
     and   r1, r8, #0x07
     add   r1, r1, #0x30                          @ '0-7'
     str   r1, [r0]
 /* Debug - UART console message */
+#endif
 
     ldr   r0, =0x1e6e0018
     ldr   r1, [r0]
@@ -1819,6 +1829,7 @@ delay_5:
   r11 = free
  *****************************************************************************/
 CBR1_START:
+#if DEBUG
 /* Debug - UART console message */
     ldr r0, =0x1e784000
     mov r1, #0x0D                                @ '\r'
@@ -1834,6 +1845,7 @@ CBR1_START:
     mov r1, #0x31                                @ '1'
     str r1, [r0]
 /* Debug - UART console message */
+#endif
 
     mov   r6, #0x00                              @ init pass count
     mov   r7, #0x00                              @ init DLL2 parameter index
@@ -2100,11 +2112,13 @@ cbr1_set_result_end:
     str   r1, [r0]
 
 CBR3_START:
+#if DEBUG
 /* Debug - UART console message */
     ldr r0, =0x1e784000
     mov r1, #0x33                                @ '3'
     str r1, [r0]
 /* Debug - UART console message */
+#endif
 
     mov   r6, #0x00                              @ init pass count
     mov   r7, #0x00                              @ init DLL2 parameter index
@@ -2319,11 +2333,13 @@ CBR3_END:
  Search the DQS input mask margin
  *****************************************************************************/
 CBR4_START:
+#if DEBUG
 /* Debug - UART console message */
     ldr r0, =0x1e784000
     mov r1, #0x34                                @ '4'
     str r1, [r0]
 /* Debug - UART console message */
+#endif
 
     ldr   r0, =0x1e6e0074                        @ set the testing DRAM size = 4KB
     ldr   r1, =0x00000FFF
@@ -2599,6 +2615,7 @@ set_scratch:
     orr r1, r1, #0x41
     str r1, [r0]
 
+#if DEBUG
 /* Debug - UART console message */
     ldr r0, =0x1e784000
     mov r1, #0x44                                @ 'D'
@@ -2614,6 +2631,7 @@ set_scratch:
     mov r1, #0x0A                                @ '\n'
     str r1, [r0]
 /* Debug - UART console message */
+#endif
 
 /******************************************************************************
  Solve PCIe ASPM issue, only applied to AST2300 series
