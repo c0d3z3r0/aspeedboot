@@ -54,21 +54,9 @@ _main:
 	ldr r9,  =kernel_size
 	bl xfer
 
-	// Start DMA load of DTB
-	ldr r7,  =dtb_start
-	ldr r8,  =CONFIG_DTB_START
-	ldr r9,  =dtb_size
-	bl xfer
-
-	// Start DMA load of initrd
-	ldr r7,  =initrd_start
-	ldr r8,  =CONFIG_INITRD_START
-	ldr r9,  =initrd_size
-	bl xfer
-
 	mov r0, #0x0
 	sub r1, r0, #0x1
-	ldr r2,  =CONFIG_DTB_START
+	mov r2, #0x0
 	mov r3, #0x0
 	mov r4, #0x0
 	mov r5, #0x0
