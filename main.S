@@ -1,6 +1,14 @@
-// Copyright 2018 the u-root Authors. All rights reserved
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+/*
+ * aspeed bootloader
+ *
+ * This is open source software, governed by the BSD 3-Clause License.
+ *
+ * Original work:
+ * Copyright 2018 the u-root Authors. All rights reserved
+ *
+ * Derived work:
+ * Copyright (C) 2019 Michael Niewöhner <foss@mniewoehner.de>
+ */
 
 #include "config.h"
 

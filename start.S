@@ -1,4 +1,5 @@
 /*
+ * Original work:
  *  armboot - Startup Code for ARM926EJS CPU-core
  *
  *  Copyright (c) 2003  Texas Instruments
@@ -11,6 +12,9 @@
  *  Copyright (c) 2003	Richard Woodruff <r-woodruff2@ti.com>
  *  Copyright (c) 2003	Kshitij <kshitij@ti.com>
  *  Copyright (c) 2010	Albert Aribaud <albert.u.boot@aribaud.net>
+ *
+ * Derived work:
+ *  Copyright (C) 2019 Michael Niewöhner <foss@mniewoehner.de>
  *
  * SPDX-License-Identifier:	GPL-2.0+
  */
