@@ -79,6 +79,8 @@ dma_wait:
 	cmp r1, #0x0
 	bne dma_wait
 
+	/* read checksum (otherwise crashes...) */
+	ldr r1, [r10, #0x90]
 
 	/* disable DMA */
 	mov r1, #0x0
