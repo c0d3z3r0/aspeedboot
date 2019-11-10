@@ -32,16 +32,7 @@
  *************************************************************************
  */
 
-	.org	0x0
-	b _start
-	b _start
-	b _start
-	b _start
-	b _start
-	b _start
-	b _start
-	b _start
-
+	.section .isr_vector
 	.globl	_start
 _start:
 	/*
