@@ -3099,6 +3099,7 @@ spi_checksum_wait_0:
     mov r1, #0x0
     str r1, [r0]
 
+#ifdef CONFIG_SPI_FAST
     ldr r0, =0x1e620010                          @ set to fast read mode
     ldr r1, =0x000B0041
     str r1, [r0]
@@ -3158,6 +3159,7 @@ spi_cbr_end:
     ldr r0, =0x1e620010
     mov r1, #0x0
     str r1, [r0]
+#endif // CONFIG_SPI_FAST
 
 platform_exit4:
 
