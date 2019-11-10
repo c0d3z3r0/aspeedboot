@@ -368,6 +368,23 @@ set_MPLL:
     str r1, [r0]
 
 /* Debug - UART console message */
+#ifdef CONFIG_DRAM_UART_TO_UART1
+    ldr   r0, =0x1e78909c                        @ route UART5 to UART Port1, 2016.08.29
+    ldr   r1, =0x10000004
+    str   r1, [r0]
+
+    ldr   r0, =0x1e6e2084
+    ldr   r1, [r0]
+    mov   r2, #0xC0                              @ Enable pinmux of TXD1/RXD1
+    orr   r1, r1, r2, lsl #16
+    str   r1, [r0]
+#endif
+
+    // Enable FIFO
+    ldr r0, =0x1e784008
+    mov r1, #0x1
+    str r1, [r0]
+
     ldr r0, =0x1e78400c
     mov r1, #0x83
     str r1, [r0]
