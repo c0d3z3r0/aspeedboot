@@ -19,10 +19,10 @@ main:
 
 /* boot sequence */
 boot:
-	ldr r7, =kernel_start	@ DMA flash source address
-	ldr r8, =kernel_size	@ DMA size
-	ldr r9, =0x41000000	@ DMA sdram target address
-	ldr r10, =0x1e620000	@ FMC
+	ldr r7, =CONFIG_KERNEL_FLASH_OFFSET	@ DMA flash source address
+	ldr r8, =CONFIG_KERNEL_SIZE		@ DMA size
+	ldr r9, =CONFIG_KERNEL_MEM_LOADADDR	@ DMA sdram target address
+	ldr r10, =0x1e620000			@ FMC
 
 	bl dma_load
 
@@ -32,7 +32,7 @@ boot:
 	mov r2, #0
 
 	/* jump to kernel code */
-	ldr pc, =0x41000000
+	ldr pc, =CONFIG_KERNEL_MEM_LOADADDR
 
 /*
  * DMA load from flash

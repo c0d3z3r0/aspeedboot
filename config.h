@@ -1,0 +1,8 @@
+#define CONFIG_SPI_ADDRESS		0x20000000
+#define CONFIG_SDRAM_ADDRESS		0x40000000
+
+#define CONFIG_KERNEL_FLASH_OFFSET	0x20010000
+#define CONFIG_KERNEL_SIZE		0x00500000
+
+/* Load kernel higher than 0x40008000 + size to avoid extra relocation */
+#define CONFIG_KERNEL_MEM_LOADADDR	0x41000000
