@@ -20,7 +20,7 @@ OBJCOPY := $(CROSS_COMPILE)objcopy
 all: boot.bin
 
 boot.elf: start.S platform_g4.S main.S
-	$(CC) -Wl,-T boot.ld -Wl,--no-dynamic-linker -nostdlib -I $(PWD) -o $@ $^
+	$(CC) -Wall -Wl,-T boot.ld -Wl,--no-dynamic-linker -nostdlib -I $(PWD) -o $@ $^
 
 boot.bin: boot.elf
 	$(OBJCOPY) --only-section=.text -O binary $< $@
