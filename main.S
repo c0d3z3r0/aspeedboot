@@ -13,6 +13,27 @@
 #include "config.h"
 
 
+/* start code jumps here */
+main:
+	.global main
+
+/* boot sequence */
+boot:
+	ldr r7, =kernel_start	@ DMA flash source address
+	ldr r8, =kernel_size	@ DMA size
+	ldr r9, =0x41000000	@ DMA sdram target address
+	ldr r10, =0x1e620000	@ FMC
+
+	bl dma_load
+
+	/* kernel boot args */
+	mov r0, #0
+	mov r1, #-1
+	mov r2, #0
+
+	/* jump to kernel code */
+	ldr pc, =0x41000000
+
 /*
  * DMA load from flash
  *
@@ -48,24 +69,3 @@ dma_wait:
 
 	/* jump back to return address in boot */
 	mov pc, r13
-
-/* start code jumps here */
-main:
-	.global main
-
-/* boot sequence */
-boot:
-	ldr r7, =kernel_start	@ DMA flash source address
-	ldr r8, =kernel_size	@ DMA size
-	ldr r9, =0x41000000	@ DMA sdram target address
-	ldr r10, =0x1e620000	@ FMC
-
-	bl dma_load
-
-	/* kernel boot args */
-	mov r0, #0
-	mov r1, #-1
-	mov r2, #0
-
-	/* jump to kernel code */
-	ldr pc, =0x41000000
