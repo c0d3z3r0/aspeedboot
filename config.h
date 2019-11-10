@@ -1,5 +1,8 @@
+#include <boards.h>
+
+#define CONFIG_BOARD			CONFIG_BOARD_SUPERMICRO_X11SSM_F
+
 #define CONFIG_DRAM_UART_115200
-#define CONFIG_DRAM_UART_TO_UART1
 #define CONFIG_SPI_FAST
 
 #define CONFIG_SPI_ADDRESS		0x20000000
@@ -10,3 +13,13 @@
 
 /* Load kernel higher than 0x40008000 + size to avoid extra relocation */
 #define CONFIG_KERNEL_MEM_LOADADDR	0x41000000
+
+/* board specific config */
+
+#if (CONFIG_BOARD == CONFIG_BOARD_SUPERMICRO_X11SSM_F)
+#define CONFIG_DRAM_UART_TO_UART1
+
+/* default */
+#else
+#define CONFIG_DRAM_UART_TO_UART1
+#endif
