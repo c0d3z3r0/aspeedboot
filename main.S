@@ -17,7 +17,7 @@
 main:
 	.global main
 
-#if (CONFIG_BOARD == CONFIG_BOARD_SUPERMICRO_X11SSM && !DEBUG)
+#if (CONFIG_BOARD == CONFIG_BOARD_SUPERMICRO_X11SSM_F && !DEBUG)
 	/* route UART1/2 to IO1/2 */
 	ldr r0, =0x1E789098
 	ldr r1, =0x00000030
