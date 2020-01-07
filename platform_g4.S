@@ -3177,6 +3177,15 @@ platform_exit4:
     ldr   r1, =0x0000A000
     str   r1, [r0]
 
+    /* Delay about 100us to be sure the SoC is ready */
+    ldr r2, =0x00000064
+    init_delay_timer
+delay_finish:
+    check_delay_timer
+    bne delay_finish
+    clear_delay_timer
+    /* end delay */
+
     /* restore lr */
     mov lr, r4
 
