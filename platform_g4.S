@@ -367,9 +367,9 @@ set_MPLL:
     and r1, r2, r1
     str r1, [r0]
 
-/* Debug - UART console message */
-#ifdef CONFIG_DRAM_UART_TO_UART1
-    ldr   r0, =0x1e78909c                        @ route UART5 to UART Port1, 2016.08.29
+#if DEBUG
+    /* Debug - route UART5 to UART IO1 */
+    ldr   r0, =0x1e78909c
     ldr   r1, =0x10000004
     str   r1, [r0]
 
@@ -378,6 +378,16 @@ set_MPLL:
     mov   r2, #0xC0                              @ Enable pinmux of TXD1/RXD1
     orr   r1, r1, r2, lsl #16
     str   r1, [r0]
+
+#elif (CONFIG_BOARD == CONFIG_BOARD_SUPERMICRO_X11SSM_F)
+    /* board uses default UART/IO routing */
+
+    /* enable all UART IO1/2 pins */
+    ldr r0, =0x1e6e2084
+    ldr r1, [r0]
+    ldr r2, =0xffff0000
+    orr r1, r1, r2
+    str r1, [r0]
 #endif
 
     // Enable FIFO

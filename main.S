@@ -17,23 +17,6 @@
 main:
 	.global main
 
-#if (CONFIG_BOARD == CONFIG_BOARD_SUPERMICRO_X11SSM_F && !DEBUG)
-	/* route UART1/2 to IO1/2 */
-	ldr r0, =0x1E789098
-	ldr r1, =0x00000030
-	str r1, [r0]
-	ldr r0, =0x1E78909c
-	ldr r1, =0x00000000
-	str r1, [r0]
-
-	/* enable UART1/2 pins */
-	ldr r0, =0x1e6e2084
-	ldr r1, [r0]
-	ldr r2, =0xffff0000
-	orr r1, r1, r2
-	str r1, [r0]
-#endif
-
 /* boot sequence */
 boot:
 	ldr r7, =CONFIG_KERNEL_FLASH_OFFSET	@ DMA flash source address
