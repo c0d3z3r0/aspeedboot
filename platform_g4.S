@@ -187,6 +187,32 @@ PATTERN_TABLE:
     ldr r2, =0x00000800
     .endm
 
+    .macro init_uart
+    /* Make DL registers accessible */
+    orr r0, r3, #0x0c
+    mov r1, #0x83
+    str r1, [r0]
+
+    /* Set up baudrate (115200) */
+    ldr r0, =0x1e6e202c
+    ldr r2, [r0]
+    mov r2, r2, lsr #12
+    tst r2, #0x01
+    moveq r1, #0x0D                              @ Baudrate 115200
+    movne r1, #0x01                              @ Baudrate 115200, div13
+    str r1, [r3]
+
+    /* Hide DL registers again */
+    orr r0, r3, #0x0c
+    mov r1, #0x03
+    str r1, [r0]
+
+    /* Enable (and reset) FIFO */
+    orr r0, r3, #0x08
+    mov r1, #0x1
+    str r1, [r0]
+    .endm
+
 /******************************************************************************
  Calibration Macro End
  ******************************************************************************/
@@ -367,62 +393,41 @@ set_MPLL:
     and r1, r2, r1
     str r1, [r0]
 
-#if DEBUG
-    /* Debug - route UART5 to UART IO1 */
-    ldr   r0, =0x1e78909c
-    ldr   r1, =0x10000004
-    str   r1, [r0]
+    /* Always initialize UART5 (BMC debug) */
+    ldr r3, =0x1e784000
+    init_uart
 
-    ldr   r0, =0x1e6e2084
-    ldr   r1, [r0]
-    mov   r2, #0xC0                              @ Enable pinmux of TXD1/RXD1
-    orr   r1, r1, r2, lsl #16
-    str   r1, [r0]
+    /* Write at least once to routing register, otherwise SoC crashes */
+    ldr r0, =0x1e6e209c
+    mov r1, #0
+    str r1, [r0]
 
-#elif (CONFIG_BOARD == CONFIG_BOARD_SUPERMICRO_X11SSM_F)
-    /* board uses default UART/IO routing */
+#if (CONFIG_BOARD == CONFIG_BOARD_SUPERMICRO_X11SSM_F)
+    /* Initialize UART1 */
+    ldr r0, =0x1e783000
+    init_uart
 
-    /* enable all UART IO1/2 pins */
+    /* Set up routing */
+    ldr r0, =0x1e78909c
+    ldr r1, =(\
+      (0b010 << 28)  /* Route IO2 to UART5 (sel5DW) */ |\
+      (0b011 <<  3)  /* Route UART5 to IO2 (sel2IO) */ |\
+      (0b000 << 16)  /* Route IO1 to UART1 (sel1DW) */ |\
+      (0b000 <<  0)  /* Route UART1 to IO1 (sel1IO) */ \
+      )
+    str r1, [r0]
+
+    /* Enable required UART IO pins */
     ldr r0, =0x1e6e2084
     ldr r1, [r0]
-    ldr r2, =0xffff0000
+    ldr r2, =(\
+      (1 << 31)    /* UART IO2 RXD */ |\
+      (1 << 30)    /* UART IO2 TXD */ |\
+      (0xff << 16) /* UART IO1 all pins */ \
+      )
     orr r1, r1, r2
     str r1, [r0]
 #endif
-
-    // Enable FIFO
-    ldr r0, =0x1e784008
-    mov r1, #0x1
-    str r1, [r0]
-
-    ldr r0, =0x1e78400c
-    mov r1, #0x83
-    str r1, [r0]
-
-    ldr r0, =0x1e6e202c
-    ldr r2, [r0]
-    mov r2, r2, lsr #12
-    tst r2, #0x01
-    ldr r0, =0x1e784000
-    moveq r1, #0x0D                              @ Baudrate 115200
-    movne r1, #0x01                              @ Baudrate 115200, div13
-#if defined(CONFIG_DRAM_UART_38400)
-    moveq r1, #0x27                              @ Baudrate 38400
-    movne r1, #0x03                              @ Baudrate 38400 , div13
-#endif
-    str r1, [r0]
-
-    ldr r0, =0x1e784004
-    mov r1, #0x00
-    str r1, [r0]
-
-    ldr r0, =0x1e78400c
-    mov r1, #0x03
-    str r1, [r0]
-
-    ldr r0, =0x1e784008
-    mov r1, #0x07
-    str r1, [r0]
 
 #if DEBUG
     ldr r0, =0x1e784000
