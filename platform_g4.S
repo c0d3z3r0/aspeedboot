@@ -3182,6 +3182,20 @@ platform_exit4:
     ldr   r1, =0x0000A000
     str   r1, [r0]
 
+#if (CONFIG_BOARD == CONFIG_BOARD_SUPERMICRO_X11SSM_F)
+    /* unlock SCU */
+    ldr r0, =0x1e6e2000
+    ldr r1, =0x1688a8a8
+    str r1, [r0]
+
+    /* fix wrong SPI mode HW strapping */
+    ldr r0, =0x1e6e2070
+    ldr r1, [r0]
+    bic r1, r1, #0x3000
+    orr r1, r1, #0x1000
+    str r1, [r0]
+#endif
+
     /* restore lr */
     mov lr, r4
 
